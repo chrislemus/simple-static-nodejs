@@ -1,13 +1,24 @@
 # Test against the latest version of this Node.js version
 environment:
   nodejs_version: "6"
+  
+init:
+  - sh: |
+      echo 'Executing the init section.'
+      appveyor version
+
 
 # Install scripts. (runs after repo cloning)
 install:
-  # Get the latest stable version of Node.js or io.js
-  - ps: Install-Product node $env:nodejs_version
-  # install modules
-  - npm install
+  - sh: |
+      echo 'Executing the install section.'
+      echo 'The current NVM version is $(nvm --version)'
+      nvm ls
+      nvm install $(cat .nvmrc)
+      npm --quiet install
+
+before_build:
+  - sh: echo 'Running scripts before build.'
 
 # Post-install test scripts.
 test_script:
